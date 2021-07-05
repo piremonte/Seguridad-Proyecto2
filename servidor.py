@@ -61,9 +61,16 @@ while True:
             try:
                 data = conexion.recv(4096)
                 #print('mensaje {!r}'.format(decrypt(data)))
-                mensajeDesencriptado = desencriptar(json.loads(data), "hola");
-                escribirEnArchivoLog(mensajeDesencriptado)
-                print('mensaje {!r}'.format(mensajeDesencriptado))
+                print('mensaje encriptado {!r}'.format(data))
+
+                try:
+                    mensajeDesencriptado = desencriptar(json.loads(data), "ProyectoSeguridad");
+                    escribirEnArchivoLog(mensajeDesencriptado)
+                    print('mensaje {!r}'.format(mensajeDesencriptado))
+
+                except:
+                    print("Clave erronea")
+                
                 if data:
                     conexion.sendall(data)
                 else:

